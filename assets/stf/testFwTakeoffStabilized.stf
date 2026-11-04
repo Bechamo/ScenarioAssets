@@ -1,0 +1,210 @@
+[
+  {
+    "comment": "init the sim",
+    "number": 1,
+    "c2_params": {
+      "JP_LNCH_EN": 0,
+      "JP_LNCH_ALT_CMD": 30,
+      "JP_LNCH_THROTTLE": 1,
+      "JP_LNCH_CMDPITCH": 10,
+      "JP_LNCH_ELEV_FF": -5
+    },
+    "initSim": {
+      "takeoffType": "RUNWAY",
+      "initPitch": 0,
+      "initHeading": 0,
+      "useScaledSurfaceInputs": true,
+      "useLauncher": false
+    }
+  },
+  {
+    "comment": "Initialization",
+    "number": 2,
+    "tst": {
+      "endTime": 0.04
+    }
+  },
+  {
+    "comment": "start in manual mode with actuators enabled",
+    "number": 3,
+    "tst": {
+      "endTime": 1
+    },
+    "c2_cmd": {
+      "desired_flight_mode": 5,
+      "actuators_enabled": "a_enabled",
+      "rc_throttle": -1
+    }
+  },
+  {
+    "comment": "enable motors",
+    "number": 4,
+    "tst": {
+      "endTime": 2,
+      "tst_eq": {
+        "fcl": {
+          "outState": {
+            "FclState": 5
+          }
+        }
+      }
+    },
+    "c2_cmd": {
+      "desired_flight_mode": 5,
+      "motors_enabled": "a_enabled"
+    }
+  },
+  {
+    "comment": "manual takeoff",
+    "number": 5,
+    "tst": {
+      "endTime": 4
+    },
+    "c2_cmd": {
+      "motors_enabled": "a_enabled"
+    }
+  },
+  {
+    "comment": "Throttle up",
+    "number": 6,
+    "tst": {
+      "endTime": 6.5,
+      "tst_eq": {
+        "fcl": {
+          "outState": {
+            "FclState": 8
+          }
+        }
+      },
+      "tst_gt": {
+        "fcl": {
+          "outMeasure": {
+            "AirspeedIas": 10
+          }
+        }
+      }
+    },
+    "c2_cmd": {
+      "rc_throttle": 1,
+      "desired_flight_mode": 8
+    }
+  },
+  {
+    "comment": "Rotate",
+    "number": 7,
+    "tst": {
+      "endTime": 15,
+      "tst_gt": {
+        "sim": {
+          "hAgl": 2
+        }
+      }
+    },
+    "c2_cmd": {
+      "rc_pitch": -0.3
+    }
+  },
+  {
+    "comment": "Climb in position mode",
+    "number": 8,
+    "tst": {
+      "endTime": 30,
+      "tst_eq": {
+        "fcl": {
+          "outState": {
+            "FclState": 14
+          }
+        }
+      }
+    },
+    "c2_cmd": {
+      "desired_flight_mode": 14,
+      "rc_pitch": -1,
+      "rc_throttle": 0.6
+    }
+  },
+  {
+    "comment": "Bank in stabilized mode",
+    "number": 9,
+    "tst": {
+      "endTime": 65
+    },
+    "c2_cmd": {
+      "rc_throttle": 0.6,
+      "rc_roll": -0.5,
+      "rc_pitch": -0.05,
+      "desired_flight_mode": 8
+    }
+  },
+  {
+    "comment": "Bank doublet stabilized mode",
+    "number": 10,
+    "tst": {
+      "endTime": 70
+    },
+    "c2_cmd": {
+      "rc_throttle": 0.5,
+      "rc_roll": 0.5,
+      "desired_flight_mode": 8
+    }
+  },
+  {
+    "comment": "Bank doublet stabilized mode end",
+    "number": 11,
+    "tst": {
+      "endTime": 75
+    },
+    "c2_cmd": {
+      "rc_throttle": 0.5,
+      "rc_roll": 0,
+      "desired_flight_mode": 8
+    }
+  },
+  {
+    "comment": "Recover in position mode",
+    "number": 12,
+    "tst": {
+      "endTime": 90
+    },
+    "c2_cmd": {
+      "desired_flight_mode": 14,
+      "rc_throttle": 0.5
+    }
+  },
+  {
+    "comment": "Pitch in stabilized mode",
+    "number": 13,
+    "tst": {
+      "endTime": 95
+    },
+    "c2_cmd": {
+      "rc_throttle": 0.6,
+      "rc_pitch": -0.2,
+      "desired_flight_mode": 8
+    }
+  },
+  {
+    "comment": "Pitch down",
+    "number": 14,
+    "tst": {
+      "endTime": 98
+    },
+    "c2_cmd": {
+      "rc_throttle": 0.6,
+      "rc_pitch": 0.2,
+      "desired_flight_mode": 8
+    }
+  },
+  {
+    "comment": "Complete pitch doublet",
+    "number": 15,
+    "tst": {
+      "endTime": 103
+    },
+    "c2_cmd": {
+      "rc_throttle": 0.6,
+      "rc_pitch": 0,
+      "desired_flight_mode": 8
+    }
+  }
+]

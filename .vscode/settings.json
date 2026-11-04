@@ -1,0 +1,14 @@
+{
+    "workbench.colorCustomizations": {
+        "titleBar.activeBackground": "#fcfaf8",
+        "titleBar.activeForeground":"#1d1515",
+        "titleBar.inactiveBackground": "#fcfaf8",
+        "titleBar.inactiveForeground": "#1d1515"
+    },
+    "python-envs.defaultEnvManager": "ms-python.python:system",
+    "python.testing.pytestArgs": [
+        "tests"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true
+}

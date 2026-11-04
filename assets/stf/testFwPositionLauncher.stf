@@ -1,0 +1,281 @@
+[
+  {
+    "comment": "init the sim",
+    "number": 1,
+    "initSim": {
+      "takeoffType": "LAUNCHER",
+      "initPitch": 0.13962634015954636,
+      "initHeading": 1.5707963267948966,
+      "useScaledSurfaceInputs": true,
+      "useLauncher": true
+    }
+  },
+  {
+    "comment": "initialization",
+    "number": 2,
+    "tst": {
+      "endTime": 0.04
+    }
+  },
+  {
+    "comment": "start in manual mode with actuators enabled",
+    "number": 3,
+    "tst": {
+      "endTime": 1
+    },
+    "c2_cmd": {
+      "desired_flight_mode": 5,
+      "actuators_enabled": "a_enabled",
+      "rc_throttle": -1
+    }
+  },
+  {
+    "comment": "enable motors",
+    "number": 4,
+    "tst": {
+      "endTime": 2,
+      "tst_eq": {
+        "fcl": {
+          "outState": {
+            "FclState": 5,
+            "OnGround": true
+          }
+        }
+      },
+      "tst_gt": {
+        "fcl": {
+          "outMeasure": {
+            "AltitudeGps": 499
+          }
+        }
+      },
+      "tst_eq_tol": {
+        "fcl": {
+          "outMeasure": {
+            "AirspeedIas": {
+              "value": 0,
+              "tol": 0.5
+            },
+            "ay": {
+              "value": 0,
+              "tol": 0.5
+            }
+          },
+          "outMixer": {
+            "NCmdRet": {
+              "value": 0,
+              "tol": 0.1
+            }
+          }
+        }
+      }
+    },
+    "c2_cmd": {
+      "desired_flight_mode": 5,
+      "motors_enabled": "a_enabled"
+    }
+  },
+  {
+    "comment": "set parameters and start FCL launch mode",
+    "number": 5,
+    "tst": {
+      "endTime": 4,
+      "tst_always_neq": {
+        "fcl": {
+          "outState": {
+            "LaunchState": 6
+          }
+        }
+      },
+      "tst_eq": {
+        "fcl": {
+          "outState": {
+            "FclState": 18
+          }
+        }
+      }
+    },
+    "c2_cmd": {
+      "desired_flight_mode": 18
+    },
+    "c2_params": {
+      "JP_LNCH_ALT_CMD": 50,
+      "JP_LNCH_IAS_CMD": 34,
+      "JP_LNCH_MAXCR": 3
+    }
+  },
+  {
+    "comment": "Release the launcher",
+    "number": 6,
+    "tst": {
+      "endTime": 15,
+      "tst_eq": {
+        "fcl": {
+          "outState": {
+            "LaunchState": 3
+          }
+        }
+      }
+    },
+    "env": {
+      "launchCmd": true
+    }
+  },
+  {
+    "comment": "Switch to position mode while climbing",
+    "number": 7,
+    "tst": {
+      "endTime": 30,
+      "tst_eq": {
+        "fcl": {
+          "outState": {
+            "FclState": 14
+          }
+        }
+      }
+    },
+    "c2_cmd": {
+      "desired_flight_mode": 14,
+      "rc_pitch": 0,
+      "rc_roll": 0,
+      "rc_throttle": 0.5,
+      "rc_yaw": 0
+    }
+  },
+  {
+    "comment": "Hold altitude",
+    "number": 8,
+    "tst": {
+      "endTime": 40,
+      "tst_eq_tol": {
+        "sim": {
+          "AirspeedIas": {
+            "value": 18.5,
+            "tol": 3
+          }
+        }
+      }
+    },
+    "c2_cmd": {
+      "rc_pitch": 0,
+      "rc_throttle": 0
+    }
+  },
+  {
+    "comment": "Turn right",
+    "number": 9,
+    "tst": {
+      "endTime": 45,
+      "tst_gt": {
+        "sim": {
+          "phi": 0.244346097,
+          "r": 0.086436227
+        }
+      }
+    },
+    "c2_cmd": {
+      "rc_roll": 0.5,
+      "rc_throttle": 0.2,
+      "rc_flap": 0
+    }
+  },
+  {
+    "comment": "Turn left",
+    "number": 10,
+    "tst": {
+      "endTime": 50,
+      "tst_lt": {
+        "sim": {
+          "phi": -0.244346097,
+          "r": 0.086436227
+        }
+      }
+    },
+    "c2_cmd": {
+      "rc_roll": -0.5,
+      "rc_throttle": 0.2,
+      "rc_flap": 0
+    }
+  },
+  {
+    "comment": "Hold heading",
+    "number": 11,
+    "tst": {
+      "endTime": 55
+    },
+    "c2_cmd": {
+      "rc_roll": 0
+    }
+  },
+  {
+    "comment": "pitch back (climb)",
+    "number": 12,
+    "tst": {
+      "endTime": 70,
+      "tst_gt": {
+        "sim": {
+          "q": 0.034906585039886591
+        }
+      },
+      "tst_eq_tol": {
+        "sim": {
+          "hdot": {
+            "value": 4,
+            "tol": 1
+          }
+        }
+      }
+    },
+    "c2_cmd": {
+      "rc_pitch": -1
+    }
+  },
+  {
+    "comment": "pitch zero",
+    "number": 13,
+    "tst": {
+      "endTime": 85,
+      "tst_lt": {
+        "sim": {
+          "hdot": 0.5
+        }
+      }
+    },
+    "c2_cmd": {
+      "rc_pitch": 0
+    }
+  },
+  {
+    "comment": "pitch forward (descend)",
+    "number": 14,
+    "tst": {
+      "endTime": 95,
+      "tst_eq_tol": {
+        "sim": {
+          "hdot": {
+            "value": -4,
+            "tol": 1
+          }
+        }
+      }
+    },
+    "c2_cmd": {
+      "rc_pitch": 1
+    }
+  },
+  {
+    "comment": "pitch zero",
+    "number": 15,
+    "tst": {
+      "endTime": 105,
+      "tst_lt": {
+        "sim": {
+          "hdot": 0.5
+        }
+      }
+    },
+    "c2_cmd": {
+      "rc_pitch": 0
+    }
+  }
+]

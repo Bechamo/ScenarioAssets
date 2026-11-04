@@ -1,0 +1,122 @@
+[
+  {
+    "comment": "init the sim",
+    "number": 1,
+    "initSim": {
+      "takeoffType": "SIMPLE_VTOL",
+      "initHeading": 1.5707963267948966,
+      "useScaledSurfaceInputs": true,
+      "useLauncher": false
+    }
+  },
+  {
+    "comment": "Initialization",
+    "number": 2,
+    "tst": {
+      "endTime": 0.04
+    }
+  },
+  {
+    "comment": "start in manual mode with actuators enabled",
+    "number": 3,
+    "tst": {
+      "endTime": 1
+    },
+    "c2_cmd": {
+      "desired_flight_mode": 5,
+      "actuators_enabled": "a_enabled",
+      "rc_throttle": -1
+    }
+  },
+  {
+    "comment": "enable motors",
+    "number": 4,
+    "tst": {
+      "endTime": 2,
+      "tst_eq": {
+        "fcl": {
+          "outState": {
+            "FclState": 5
+          }
+        }
+      }
+    },
+    "c2_cmd": {
+      "desired_flight_mode": 5,
+      "motors_enabled": "a_enabled"
+    }
+  },
+  {
+    "comment": "VTOL takeoff, validate airborne",
+    "number": 5,
+    "tst": {
+      "endTime": 25,
+      "tst_eq": {
+        "fcl": {
+          "outState": {
+            "FclState": 23
+          }
+        }
+      },
+      "tst_gt": {
+        "sim": {
+          "hAgl": 5
+        }
+      }
+    },
+    "c2_cmd": {
+      "desired_flight_mode": 23
+    }
+  },
+  {
+    "comment": "Hold heading 10 s, airborne throughout",
+    "number": 6,
+    "tst": {
+      "endTime": 35,
+      "tst_always_gt": {
+        "sim": {
+          "hAgl": 20
+        }
+      }
+    }
+  },
+  {
+    "comment": "VTOL land, validate landing completes",
+    "number": 7,
+    "tst": {
+      "endTime": 70,
+      "endState": {
+        "eq": {
+          "fcl": {
+            "outState": {
+              "VtolAtolState": 1,
+              "OnGround": true
+            }
+          }
+        }
+      }
+    },
+    "c2_cmd": {
+      "desired_flight_mode": 24
+    }
+  },
+  {
+    "comment": "After landing hAgl stays constant 10 s",
+    "number": 8,
+    "tst": {
+      "endTime": 80,
+      "tst_always_gt": {
+        "sim": {
+          "hAgl": -0.63
+        }
+      },
+      "endState": {
+        "lt": {
+          "sim": {
+            "hAgl": -0.52
+          }
+        }
+      }
+    }
+  }
+]

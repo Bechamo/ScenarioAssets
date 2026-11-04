@@ -1,0 +1,282 @@
+[
+  {
+    "comment": "init the sim",
+    "number": 1,
+    "initSim": {
+      "takeoffType": "LAUNCHER",
+      "initPitch": 0.13962634015954636,
+      "initHeading": 1.5707963267948966,
+      "useScaledSurfaceInputs": true,
+      "useLauncher": true
+    }
+  },
+  {
+    "comment": "initialization",
+    "number": 2,
+    "tst": {
+      "endTime": 0.04
+    }
+  },
+  {
+    "comment": "start in manual mode with actuators enabled",
+    "number": 3,
+    "tst": {
+      "endTime": 1
+    },
+    "c2_cmd": {
+      "desired_flight_mode": 5,
+      "actuators_enabled": "a_enabled",
+      "rc_throttle": -1
+    }
+  },
+  {
+    "comment": "enable motors",
+    "number": 4,
+    "tst": {
+      "endTime": 2,
+      "tst_eq": {
+        "fcl": {
+          "outState": {
+            "FclState": 5,
+            "OnGround": true
+          }
+        }
+      },
+      "tst_gt": {
+        "fcl": {
+          "outMeasure": {
+            "AltitudeGps": 499
+          }
+        }
+      },
+      "tst_eq_tol": {
+        "fcl": {
+          "outMeasure": {
+            "AirspeedIas": {
+              "value": 0,
+              "tol": 0.5
+            },
+            "ay": {
+              "value": 0,
+              "tol": 0.5
+            }
+          },
+          "outMixer": {
+            "NCmdRet": {
+              "value": 0,
+              "tol": 0.1
+            }
+          }
+        }
+      }
+    },
+    "c2_cmd": {
+      "desired_flight_mode": 5,
+      "motors_enabled": "a_enabled"
+    }
+  },
+  {
+    "comment": "set parameters and start FCL launch mode",
+    "number": 5,
+    "tst": {
+      "endTime": 4,
+      "tst_always_neq": {
+        "fcl": {
+          "outState": {
+            "LaunchState": 6
+          }
+        }
+      },
+      "tst_eq": {
+        "fcl": {
+          "outState": {
+            "FclState": 18
+          }
+        }
+      }
+    },
+    "c2_cmd": {
+      "desired_flight_mode": 18
+    },
+    "c2_params": {
+      "JP_LNCH_ALT_CMD": 50,
+      "JP_LNCH_IAS_CMD": 34,
+      "JP_LNCH_MAXCR": 3,
+      "WIG_ENABLE_AGL": -100,
+      "JP_ALT_REF": "AGL"
+    }
+  },
+  {
+    "comment": "Release the launcher",
+    "number": 6,
+    "tst": {
+      "endTime": 7,
+      "tst_eq": {
+        "fcl": {
+          "outState": {
+            "LaunchState": 3
+          }
+        }
+      }
+    },
+    "env": {
+      "launchCmd": true
+    }
+  },
+  {
+    "comment": "Switch to position mode holding altitude",
+    "number": 7,
+    "tst": {
+      "endTime": 22,
+      "tst_eq": {
+        "fcl": {
+          "outState": {
+            "FclState": 14
+          }
+        }
+      }
+    },
+    "c2_cmd": {
+      "desired_flight_mode": 14,
+      "rc_pitch": 0,
+      "rc_roll": 0,
+      "rc_throttle": 0.6,
+      "rc_yaw": 0
+    }
+  },
+  {
+    "comment": "Turn on WIG controller",
+    "number": 8,
+    "tst": {
+      "endTime": 32,
+      "tst_eq_tol": {
+        "sim": {
+          "AirspeedIas": {
+            "value": 18.5,
+            "tol": 3
+          }
+        }
+      },
+      "tst_always_gt": {
+        "sim": {
+          "hAgl": 5
+        }
+      }
+    },
+    "c2_cmd": {
+      "rc_pitch": 0,
+      "rc_throttle": 0
+    },
+    "c2_params": {
+      "WIG_ENABLE_AGL": 20
+    }
+  },
+  {
+    "comment": "Descend into WIG control at 3 m",
+    "number": 9,
+    "tst": {
+      "endTime": 52,
+      "tst_eq_tol": {
+        "sim": {
+          "hAgl": {
+            "value": 3,
+            "tol": 0.5
+          }
+        }
+      }
+    },
+    "c2_cmd": {
+      "rc_pitch": 1,
+      "rc_throttle": 0
+    },
+    "c2_params": {
+      "WIG_MIN_AGL": 3
+    }
+  },
+  {
+    "comment": "Lower to 1.5 m AGL",
+    "number": 10,
+    "tst": {
+      "tst_eq_tol": {
+        "sim": {
+          "hAgl": {
+            "value": 1.5,
+            "tol": 0.5
+          }
+        }
+      },
+      "endTime": 62
+    },
+    "c2_cmd": {
+      "rc_pitch": 1
+    },
+    "c2_params": {
+      "WIG_MIN_AGL": 1.5
+    }
+  },
+  {
+    "comment": "Turn right",
+    "number": 11,
+    "tst": {
+      "endTime": 67,
+      "tst_gt": {
+        "sim": {
+          "phi": 0.52359877559829882
+        }
+      },
+      "tst_always_gt": {
+        "sim": {
+          "hAgl": 0.5
+        }
+      }
+    },
+    "c2_cmd": {
+      "rc_roll": 1
+    }
+  },
+  {
+    "comment": "Turn left",
+    "number": 12,
+    "tst": {
+      "endTime": 72,
+      "tst_gt": {
+        "sim": {
+          "phi": -0.52359877559829882
+        }
+      },
+      "tst_always_gt": {
+        "sim": {
+          "hAgl": 0.5
+        }
+      }
+    },
+    "c2_cmd": {
+      "rc_roll": -1
+    }
+  },
+  {
+    "comment": "Hold heading",
+    "number": 13,
+    "tst": {
+      "endTime": 77,
+      "tst_always_gt": {
+        "sim": {
+          "hAgl": 0.5
+        }
+      }
+    },
+    "c2_cmd": {
+      "rc_roll": 0
+    }
+  },
+  {
+    "comment": "Climb back up out of ground effect",
+    "number": 14,
+    "tst": {
+      "endTime": 107
+    },
+    "c2_cmd": {
+      "rc_pitch": -1
+    }
+  }
+]

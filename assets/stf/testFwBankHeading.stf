@@ -1,0 +1,246 @@
+[
+  {
+    "comment": "init the sim",
+    "number": 1,
+    "initSim": {
+      "takeoffType": "LAUNCHER",
+      "initPitch": 0.069813170079773182,
+      "initHeading": 1.5707963267948966,
+      "useScaledSurfaceInputs": true,
+      "useLauncher": true
+    }
+  },
+  {
+    "comment": "initialization",
+    "number": 2,
+    "tst": {
+      "endTime": 0.04
+    }
+  },
+  {
+    "comment": "start in manual mode with actuators enabled",
+    "number": 3,
+    "tst": {
+      "endTime": 1
+    },
+    "c2_cmd": {
+      "desired_flight_mode": 5,
+      "actuators_enabled": "a_enabled",
+      "rc_throttle": -1
+    }
+  },
+  {
+    "comment": "enable motors",
+    "number": 4,
+    "tst": {
+      "endTime": 2,
+      "tst_eq": {
+        "fcl": {
+          "outState": {
+            "FclState": 5,
+            "OnGround": true
+          }
+        }
+      },
+      "tst_gt": {
+        "fcl": {
+          "outMeasure": {
+            "AltitudeGps": 499
+          }
+        }
+      },
+      "tst_eq_tol": {
+        "fcl": {
+          "outMeasure": {
+            "AirspeedIas": {
+              "value": 0,
+              "tol": 0.5
+            },
+            "ay": {
+              "value": 0,
+              "tol": 0.5
+            }
+          },
+          "outMixer": {
+            "NCmdRet": {
+              "value": 0,
+              "tol": 0.1
+            }
+          }
+        }
+      }
+    },
+    "c2_cmd": {
+      "desired_flight_mode": 5,
+      "motors_enabled": "a_enabled"
+    }
+  },
+  {
+    "comment": "set parameters and start FCL launch mode",
+    "number": 5,
+    "tst": {
+      "endTime": 4,
+      "tst_always_neq": {
+        "fcl": {
+          "outState": {
+            "LaunchState": 6
+          }
+        }
+      },
+      "tst_eq": {
+        "fcl": {
+          "outState": {
+            "FclState": 18
+          }
+        }
+      }
+    },
+    "c2_cmd": {
+      "desired_flight_mode": 18
+    },
+    "c2_params": {
+      "JP_LNCH_ALT_CMD": 50,
+      "JP_LNCH_IAS_CMD": 34,
+      "JP_LNCH_MAXCR": 3
+    }
+  },
+  {
+    "comment": "Release the launcher",
+    "number": 6,
+    "tst": {
+      "endTime": 15,
+      "tst_eq": {
+        "fcl": {
+          "outState": {
+            "LaunchState": 5
+          }
+        }
+      }
+    },
+    "env": {
+      "launchCmd": true
+    }
+  },
+  {
+    "comment": "check for vertical speed",
+    "number": 7,
+    "tst": {
+      "endTime": 16,
+      "endState": {
+        "gt": {
+          "sim": {
+            "hdot": 2
+          }
+        }
+      }
+    }
+  },
+  {
+    "comment": "Switch to position mode while climbing",
+    "number": 8,
+    "tst": {
+      "endTime": 17,
+      "tst_eq": {
+        "fcl": {
+          "outState": {
+            "FclState": 14
+          }
+        }
+      }
+    },
+    "c2_cmd": {
+      "desired_flight_mode": 14,
+      "rc_pitch": -1,
+      "rc_roll": 0,
+      "rc_throttle": 0.5,
+      "rc_yaw": 0
+    }
+  },
+  {
+    "comment": "Hold altitude",
+    "number": 9,
+    "tst": {
+      "endTime": 19
+    },
+    "c2_cmd": {
+      "rc_pitch": 0,
+      "rc_throttle": 0
+    }
+  },
+  {
+    "comment": "Switch to bankheading",
+    "number": 10,
+    "tst": {
+      "endTime": 20,
+      "tst_eq": {
+        "fcl": {
+          "outState": {
+            "FclState": 32
+          }
+        }
+      },
+      "tst_eq_tol": {
+        "sim": {
+          "AirspeedIas": {
+            "value": 18.5,
+            "tol": 10
+          }
+        }
+      }
+    },
+    "c2_cmd": {
+      "desired_flight_mode": 32,
+      "rc_throttle": 0
+    }
+  },
+  {
+    "comment": "Turn slowly",
+    "number": 11,
+    "tst": {
+      "endTime": 28,
+      "tst_gt": {
+        "sim": {
+          "r": 0.017453292519943295
+        }
+      }
+    },
+    "c2_cmd": {
+      "rc_yaw": 0.5
+    }
+  },
+  {
+    "comment": "stop turning",
+    "number": 12,
+    "tst": {
+      "endTime": 38
+    },
+    "c2_cmd": {
+      "rc_yaw": 0
+    }
+  },
+  {
+    "comment": "Turn fast",
+    "number": 13,
+    "tst": {
+      "endTime": 48,
+      "tst_lt": {
+        "sim": {
+          "r": -0.034906585039886591
+        }
+      }
+    },
+    "c2_cmd": {
+      "rc_yaw": -1
+    }
+  },
+  {
+    "comment": "stop turning",
+    "number": 14,
+    "tst": {
+      "endTime": 58
+    },
+    "c2_cmd": {
+      "rc_yaw": 0
+    }
+  }
+]
