@@ -1,0 +1,116 @@
+{
+  "name": "csim-scenarios",
+  "displayName": "Clarkesim Scenarios",
+  "description": "Browse ScenerioAssets configs, STF tests and missions, and launch Clarkesim with them.",
+  "version": "0.0.1",
+  "publisher": "bechamo",
+  "private": true,
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": ["Testing", "Other"],
+  "main": "./out/extension.js",
+  "activationEvents": [
+    "workspaceContains:assets/yamls"
+  ],
+  "contributes": {
+    "commands": [
+      { "command": "csim.runConfig", "title": "Run in Clarkesim", "category": "Clarkesim", "icon": "$(play)" },
+      { "command": "csim.runConfigWithStf", "title": "Run in Clarkesim with STF…", "category": "Clarkesim", "icon": "$(run-all)" },
+      { "command": "csim.runStf", "title": "Run this STF with config…", "category": "Clarkesim", "icon": "$(play)" },
+      { "command": "csim.refresh", "title": "Refresh", "category": "Clarkesim", "icon": "$(refresh)" },
+      { "command": "csim.openSettings", "title": "Open Settings", "category": "Clarkesim", "icon": "$(gear)" }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        { "id": "csim", "title": "Clarkesim", "icon": "$(rocket)" }
+      ]
+    },
+    "views": {
+      "csim": [
+        { "id": "csim.scenarios", "name": "Scenarios" }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "csim.scenarios",
+        "contents": "No assets folder found. Open the ScenerioAssets folder, or set the assets path.\n[Open Settings](command:csim.openSettings)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        { "command": "csim.refresh", "when": "view == csim.scenarios", "group": "navigation" },
+        { "command": "csim.openSettings", "when": "view == csim.scenarios", "group": "navigation" }
+      ],
+      "view/item/context": [
+        { "command": "csim.runConfig", "when": "view == csim.scenarios && viewItem == csim.config", "group": "inline@1" },
+        { "command": "csim.runConfigWithStf", "when": "view == csim.scenarios && viewItem == csim.config", "group": "inline@2" },
+        { "command": "csim.runStf", "when": "view == csim.scenarios && viewItem == csim.stf", "group": "inline@1" }
+      ],
+      "explorer/context": [
+        { "command": "csim.runConfig", "when": "resourceExtname == .yaml || resourceExtname == .yml", "group": "csim@1" },
+        { "command": "csim.runConfigWithStf", "when": "resourceExtname == .yaml || resourceExtname == .yml", "group": "csim@2" },
+        { "command": "csim.runStf", "when": "resourceExtname == .stf", "group": "csim@1" }
+      ],
+      "editor/title": [
+        { "command": "csim.runConfig", "when": "resourceExtname == .yaml || resourceExtname == .yml", "group": "navigation" }
+      ],
+      "commandPalette": [
+        { "command": "csim.runStf", "when": "resourceExtname == .stf" }
+      ]
+    },
+    "taskDefinitions": [
+      {
+        "type": "csim",
+        "required": ["config"],
+        "properties": {
+          "config": { "type": "string", "description": "Path to the Clarkesim settings YAML." },
+          "aircraft": { "type": "string", "description": "Aircraft build to use (e.g. lincoln)." }
+        }
+      }
+    ],
+    "configuration": {
+      "title": "Clarkesim",
+      "properties": {
+        "csim.clarkesimPath": {
+          "type": "string",
+          "default": "",
+          "description": "Path to the Clarkesim repo. Used as the working directory for runs. Empty = sibling folder ../Clarkesim next to the workspace."
+        },
+        "csim.simulatorPath": {
+          "type": "string",
+          "default": "${clarkesimPath}/_build/${aircraft}/src/Simulator",
+          "description": "Path to the Simulator binary. Supports ${clarkesimPath}, ${aircraft} and ${workspaceFolder}. On Windows, .exe is tried automatically."
+        },
+        "csim.extraArgs": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": [],
+          "description": "Extra arguments appended after `-c <config>`."
+        },
+        "csim.assetsPath": {
+          "type": "string",
+          "default": "assets",
+          "description": "Assets folder, relative to the workspace folder."
+        },
+        "csim.showArchive": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show yamls/archive in the Scenarios view."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "vsce package --allow-missing-repository --skip-license"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@types/vscode": "^1.90.0",
+    "@vscode/vsce": "^3.2.0",
+    "typescript": "^5.6.0"
+  }
+}
