@@ -1,6 +1,6 @@
 # Clarkesim Scenarios (VS Code extension)
 
-Browse the configs, STF tests and missions in `assets/`, and launch Clarkesim's `Simulator` with them.
+Browse Clarkesim's configs (`config/`) and this repo's STF tests (`stf/`) and missions (`mission/`), and launch Clarkesim's `Simulator` with them.
 
 ## Develop
 
@@ -12,7 +12,7 @@ npm install
 code .          # then press F5
 ```
 
-F5 compiles the extension and opens an Extension Development Host on the ScenerioAssets folder (`../..`).
+F5 compiles the extension and opens an Extension Development Host on the ScenarioAssets folder (`../..`).
 
 ## Features
 
@@ -23,18 +23,18 @@ F5 compiles the extension and opens an Extension Development Host on the Sceneri
   `run_stc:` pointing at the chosen STF (to the extension's global storage) and runs that copy.
 - The `Clarkesim` output channel logs each command line and exit code.
 
-The aircraft is taken from the folder (`assets/yamls/<aircraft>/…`), then from the filename prefix
+The aircraft is taken from the folder (`<Clarkesim>/config/<aircraft>/…`), then from the filename prefix
 (`lincoln_…`). If neither matches, you're asked to pick one.
 
 ## Settings
 
 | Setting | Default | Notes |
 |---|---|---|
-| `csim.clarkesimPath` | *(empty → `../Clarkesim`)* | Clarkesim repo; used as the run's working directory |
+| `csim.clarkesimPath` | *(empty → parent Clarkesim repo when checked out as its submodule, else `../Clarkesim`)* | Clarkesim repo; used as the run's working directory and the source of configs |
 | `csim.simulatorPath` | `${clarkesimPath}/_build/${aircraft}/src/Simulator` | `.exe` is tried automatically on Windows |
 | `csim.extraArgs` | `[]` | Appended after `-c <config>` |
-| `csim.assetsPath` | `assets` | Relative to the workspace folder |
-| `csim.showArchive` | `false` | Show `yamls/archive` |
+| `csim.assetsPath` | `.` | Folder holding `stf/` and `mission/`, relative to the workspace folder |
+| `csim.showArchive` | `false` | Show `config/archive` |
 
 ## Package
 

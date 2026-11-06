@@ -2,11 +2,13 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
 
-/** Workspace folder that contains the assets (first folder that has one, else the first folder). */
+/** Workspace folder that contains the assets (first folder with an stf/ or mission/ folder, else the first folder). */
 export function workspaceRoot(): vscode.WorkspaceFolder | undefined {
   const folders = vscode.workspace.workspaceFolders ?? [];
-  const assets = settings().get<string>('assetsPath', 'assets');
-  return folders.find(f => fs.existsSync(path.join(f.uri.fsPath, assets))) ?? folders[0];
+  const assets = settings().get<string>('assetsPath', '.');
+  const hasAssets = (f: vscode.WorkspaceFolder) =>
+    ['stf', 'mission'].some(d => fs.existsSync(path.join(f.uri.fsPath, assets, d)));
+  return folders.find(hasAssets) ?? folders[0];
 }
 
 export function settings(): vscode.WorkspaceConfiguration {
@@ -16,20 +18,25 @@ export function settings(): vscode.WorkspaceConfiguration {
 export function assetsDir(): string | undefined {
   const root = workspaceRoot();
   if (!root) { return undefined; }
-  const dir = path.join(root.uri.fsPath, settings().get<string>('assetsPath', 'assets'));
+  const dir = path.join(root.uri.fsPath, settings().get<string>('assetsPath', '.'));
   return fs.existsSync(dir) ? dir : undefined;
 }
 
-export function yamlsDir(): string | undefined {
-  const a = assetsDir();
-  return a ? path.join(a, 'yamls') : undefined;
+/** Clarkesim's config/ folder, which holds the aircraft configs. */
+export function configsDir(): string | undefined {
+  const dir = path.join(clarkesimPath(), 'config');
+  return fs.existsSync(dir) ? dir : undefined;
 }
 
 export function clarkesimPath(): string {
   const configured = settings().get<string>('clarkesimPath', '').trim();
   const ws = workspaceRoot()?.uri.fsPath ?? '';
   if (configured) { return path.resolve(ws, expandVars(configured, {})); }
-  return path.resolve(ws, '..', 'Clarkesim');
+  // ScenarioAssets is either checked out as Clarkesim's src/submodules/ScenarioAssets,
+  // or cloned next to it as ../Clarkesim.
+  const candidates = [path.resolve(ws, '..', '..', '..'), path.resolve(ws, '..', 'Clarkesim')];
+  return candidates.find(c => fs.existsSync(path.join(c, 'config')) && fs.existsSync(path.join(c, 'src', 'submodules')))
+    ?? candidates[1];
 }
 
 function expandVars(s: string, vars: Record<string, string>): string {
@@ -46,12 +53,14 @@ export function simulatorPath(aircraft: string): { path: string; exists: boolean
   return { path: found ?? candidates[0], exists: !!found };
 }
 
-/** Aircraft folders under assets/yamls (excluding archive and _docs). */
+const NON_AIRCRAFT = ['archive', 'stf'];
+
+/** Aircraft folders under Clarkesim's config/ (excluding archive, stf and _docs). */
 export function knownAircraft(): string[] {
-  const dir = yamlsDir();
+  const dir = configsDir();
   if (!dir || !fs.existsSync(dir)) { return []; }
   return fs.readdirSync(dir, { withFileTypes: true })
-    .filter(d => d.isDirectory() && !d.name.startsWith('_') && d.name.toLowerCase() !== 'archive')
+    .filter(d => d.isDirectory() && !d.name.startsWith('_') && !NON_AIRCRAFT.includes(d.name.toLowerCase()))
     .map(d => d.name)
     .sort();
 }

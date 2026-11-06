@@ -1,0 +1,280 @@
+{
+    "fileType": "Plan",
+    "geoFence": {
+        "circles": [],
+        "polygons": [
+            {
+                "inclusion": true,
+                "polygon": [
+                    [
+                        30.163787,
+                        -102.640984
+                    ],
+                    [
+                        30.215136,
+                        -102.634547
+                    ],
+                    [
+                        30.213727,
+                        -102.537129
+                    ],
+                    [
+                        30.139821,
+                        -102.543137
+                    ]
+                ],
+                "version": 1
+            }
+        ],
+        "version": 2
+    },
+    "groundStation": "MPT_v2.2.3_Configuration File",
+    "mission": {
+        "cruiseSpeed": 32.0,
+        "firmwareType": 12,
+        "globalPlanAltitudeMode": 2,
+        "hoverSpeed": 5,
+        "items": [
+            {
+                "AMSLAltAboveTerrain": 30.0,
+                "Altitude": 30.0,
+                "AltitudeMode": 3,
+                "autoContinue": true,
+                "command": 22,
+                "doJumpId": 1,
+                "frame": 0,
+                "params": [
+                    0,
+                    0,
+                    32,
+                    0,
+                    30.165765,
+                    -102.578242,
+                    1039.0
+                ],
+                "type": "SimpleItem"
+            },
+            {
+                "AMSLAltAboveTerrain": 28.8,
+                "Altitude": 28.8,
+                "AltitudeMode": 3,
+                "autoContinue": true,
+                "command": 16,
+                "doJumpId": 2,
+                "frame": 0,
+                "params": [
+                    0,
+                    0,
+                    32,
+                    0,
+                    30.164621,
+                    -102.567189,
+                    1063.8
+                ],
+                "type": "SimpleItem"
+            },
+            {
+                "AMSLAltAboveTerrain": 147.0,
+                "Altitude": 147.0,
+                "AltitudeMode": 3,
+                "autoContinue": true,
+                "command": 16,
+                "doJumpId": 3,
+                "frame": 0,
+                "params": [
+                    0,
+                    0,
+                    32,
+                    0,
+                    30.176494,
+                    -102.554891,
+                    1150.0
+                ],
+                "type": "SimpleItem"
+            },
+            {
+                "AMSLAltAboveTerrain": 85.0,
+                "Altitude": 85.0,
+                "AltitudeMode": 3,
+                "autoContinue": true,
+                "command": 16,
+                "doJumpId": 4,
+                "frame": 0,
+                "params": [
+                    0,
+                    0,
+                    32,
+                    0,
+                    30.187494,
+                    -102.625106,
+                    1200.0
+                ],
+                "type": "SimpleItem"
+            },
+            {
+                "AMSLAltAboveTerrain": 222.0,
+                "Altitude": 222.0,
+                "AltitudeMode": 3,
+                "autoContinue": true,
+                "command": 16,
+                "doJumpId": 5,
+                "frame": 0,
+                "params": [
+                    0,
+                    0,
+                    32,
+                    0,
+                    30.196812,
+                    -102.6003,
+                    1300.0
+                ],
+                "type": "SimpleItem"
+            },
+            {
+                "AMSLAltAboveTerrain": 296.0,
+                "Altitude": 296.0,
+                "AltitudeMode": 3,
+                "autoContinue": true,
+                "command": 16,
+                "doJumpId": 6,
+                "frame": 0,
+                "params": [
+                    0,
+                    0,
+                    32,
+                    0,
+                    30.163691,
+                    -102.614052,
+                    1400.0
+                ],
+                "type": "SimpleItem"
+            },
+            {
+                "AMSLAltAboveTerrain": 515.0,
+                "Altitude": 515.0,
+                "AltitudeMode": 3,
+                "autoContinue": true,
+                "command": 16,
+                "doJumpId": 7,
+                "frame": 0,
+                "params": [
+                    0,
+                    0,
+                    32,
+                    0,
+                    30.151454,
+                    -102.56294,
+                    1500.0
+                ],
+                "type": "SimpleItem"
+            },
+            {
+                "AMSLAltAboveTerrain": 924.0,
+                "Altitude": 924.0,
+                "AltitudeMode": 3,
+                "autoContinue": true,
+                "command": 16,
+                "doJumpId": 8,
+                "frame": 0,
+                "params": [
+                    32.5,
+                    1926.7,
+                    32,
+                    52.5,
+                    30.156923,
+                    -102.578001,
+                    1950.0
+                ],
+                "type": "SimpleItem"
+            },
+            {
+                "AMSLAltAboveTerrain": 927.0,
+                "Altitude": 927.0,
+                "AltitudeMode": 3,
+                "autoContinue": true,
+                "command": 16,
+                "doJumpId": 9,
+                "frame": 0,
+                "params": [
+                    32.5,
+                    1926.7,
+                    32,
+                    52.5,
+                    30.161271,
+                    -102.58248,
+                    1950.0
+                ],
+                "type": "SimpleItem"
+            },
+            {
+                "AMSLAltAboveTerrain": 662.0,
+                "Altitude": 662.0,
+                "AltitudeMode": 3,
+                "autoContinue": true,
+                "command": 16,
+                "doJumpId": 10,
+                "frame": 0,
+                "params": [
+                    32.5,
+                    1676.7,
+                    32,
+                    52.5,
+                    30.162239,
+                    -102.583478,
+                    1700.0
+                ],
+                "type": "SimpleItem"
+            },
+            {
+                "AMSLAltAboveTerrain": 240.0,
+                "Altitude": 240.0,
+                "AltitudeMode": 3,
+                "autoContinue": true,
+                "command": 16,
+                "doJumpId": 11,
+                "frame": 0,
+                "params": [
+                    32.5,
+                    1241.7,
+                    32,
+                    52.5,
+                    30.163923,
+                    -102.585214,
+                    1265.0
+                ],
+                "type": "SimpleItem"
+            },
+            {
+                "AMSLAltAboveTerrain": 236.0,
+                "Altitude": 236.0,
+                "AltitudeMode": 3,
+                "autoContinue": true,
+                "command": 16,
+                "doJumpId": 12,
+                "frame": 0,
+                "params": [
+                    32.5,
+                    1241.7,
+                    32,
+                    52.5,
+                    30.170111,
+                    -102.59159,
+                    1265.0
+                ],
+                "type": "SimpleItem"
+            }
+        ],
+        "plannedHomePosition": [
+            30.165765,
+            -102.578242,
+            null
+        ],
+        "vehicleType": 1,
+        "version": 2
+    },
+    "rallyPoints": {
+        "points": [],
+        "version": 2
+    },
+    "version": 1
+}
