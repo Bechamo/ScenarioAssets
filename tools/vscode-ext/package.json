@@ -1,7 +1,7 @@
 {
   "name": "csim-scenarios",
   "displayName": "Clarkesim Scenarios",
-  "description": "Browse ScenerioAssets configs, STF tests and missions, and launch Clarkesim with them.",
+  "description": "Browse Clarkesim configs and ScenarioAssets STF tests and missions, and launch Clarkesim with them.",
   "version": "0.0.1",
   "publisher": "bechamo",
   "private": true,
@@ -11,7 +11,8 @@
   "categories": ["Testing", "Other"],
   "main": "./out/extension.js",
   "activationEvents": [
-    "workspaceContains:assets/yamls"
+    "workspaceContains:stf",
+    "workspaceContains:mission"
   ],
   "contributes": {
     "commands": [
@@ -34,7 +35,7 @@
     "viewsWelcome": [
       {
         "view": "csim.scenarios",
-        "contents": "No assets folder found. Open the ScenerioAssets folder, or set the assets path.\n[Open Settings](command:csim.openSettings)"
+        "contents": "No stf or mission folder found. Open the ScenarioAssets folder, or set the assets path.\n[Open Settings](command:csim.openSettings)"
       }
     ],
     "menus": {
@@ -75,7 +76,7 @@
         "csim.clarkesimPath": {
           "type": "string",
           "default": "",
-          "description": "Path to the Clarkesim repo. Used as the working directory for runs. Empty = sibling folder ../Clarkesim next to the workspace."
+          "description": "Path to the Clarkesim repo. Used as the working directory for runs and the source of configs (config/). Empty = the Clarkesim repo this is a submodule of, else ../Clarkesim."
         },
         "csim.simulatorPath": {
           "type": "string",
@@ -90,13 +91,13 @@
         },
         "csim.assetsPath": {
           "type": "string",
-          "default": "assets",
-          "description": "Assets folder, relative to the workspace folder."
+          "default": ".",
+          "description": "Folder holding stf/ and mission/, relative to the workspace folder."
         },
         "csim.showArchive": {
           "type": "boolean",
           "default": false,
-          "description": "Show yamls/archive in the Scenarios view."
+          "description": "Show config/archive in the Scenarios view."
         }
       }
     }

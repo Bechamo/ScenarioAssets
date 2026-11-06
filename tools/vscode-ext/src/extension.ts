@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
-import { assetsDir, settings } from './config';
+import { assetsDir, configsDir, settings } from './config';
 import { output, runConfig, runConfigWithStf, watchTaskExits } from './runner';
 import { ScenarioNode, ScenarioTreeProvider } from './scenarioTree';
 
@@ -25,22 +25,22 @@ export function activate(ctx: vscode.ExtensionContext): void {
     vscode.commands.registerCommand('csim.runConfigWithStf', async (arg?: unknown) => {
       const config = toUri(arg);
       if (!config) { return; }
-      const stf = await pickFile('stf/**/*.stf', 'Pick an STF test to run with ' + path.basename(config.fsPath));
+      const stf = await pickFile(assetsDir(), 'stf/**/*.stf', 'Pick an STF test to run with ' + path.basename(config.fsPath));
       if (stf) { await runConfigWithStf(ctx, config.fsPath, stf.fsPath); }
     }),
 
     vscode.commands.registerCommand('csim.runStf', async (arg?: unknown) => {
       const stf = toUri(arg);
       if (!stf) { return; }
-      const config = await pickFile('yamls/**/*.{yaml,yml}', 'Pick a config to run ' + path.basename(stf.fsPath) + ' with');
+      const config = await pickFile(configsDir(), '**/*.{yaml,yml}', 'Pick a config to run ' + path.basename(stf.fsPath) + ' with');
       if (config) { await runConfigWithStf(ctx, config.fsPath, stf.fsPath); }
     }),
   );
 
-  // Keep the tree in sync with the assets folder.
-  const assets = assetsDir();
-  if (assets) {
-    const watcher = vscode.workspace.createFileSystemWatcher(new vscode.RelativePattern(assets, '**/*'));
+  // Keep the tree in sync with the assets and config folders.
+  for (const dir of [assetsDir(), configsDir()]) {
+    if (!dir) { continue; }
+    const watcher = vscode.workspace.createFileSystemWatcher(new vscode.RelativePattern(dir, '**/*'));
     ctx.subscriptions.push(watcher,
       watcher.onDidCreate(() => tree.refresh()),
       watcher.onDidDelete(() => tree.refresh()));
@@ -59,13 +59,12 @@ function toUri(arg: unknown): vscode.Uri | undefined {
   return vscode.window.activeTextEditor?.document.uri;
 }
 
-async function pickFile(glob: string, title: string): Promise<vscode.Uri | undefined> {
-  const assets = assetsDir();
-  if (!assets) { vscode.window.showErrorMessage('No assets folder found in the workspace.'); return; }
+async function pickFile(base: string | undefined, glob: string, title: string): Promise<vscode.Uri | undefined> {
+  if (!base) { vscode.window.showErrorMessage('Folder not found. Check the csim.assetsPath and csim.clarkesimPath settings.'); return; }
   const exclude = settings().get<boolean>('showArchive', false) ? '**/_docs/**' : '{**/archive/**,**/_docs/**}';
-  const files = await vscode.workspace.findFiles(new vscode.RelativePattern(assets, glob), exclude);
+  const files = await vscode.workspace.findFiles(new vscode.RelativePattern(base, glob), exclude);
   const items = files
-    .map(u => ({ label: path.basename(u.fsPath), description: path.relative(assets, path.dirname(u.fsPath)), uri: u }))
+    .map(u => ({ label: path.basename(u.fsPath), description: path.relative(base, path.dirname(u.fsPath)), uri: u }))
     .sort((a, b) => (a.description + a.label).localeCompare(b.description + b.label));
   return (await vscode.window.showQuickPick(items, { title, matchOnDescription: true }))?.uri;
 }

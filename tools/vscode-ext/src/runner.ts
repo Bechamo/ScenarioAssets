@@ -1,13 +1,13 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
-import { clarkesimPath, knownAircraft, settings, simulatorPath, workspaceRoot, yamlsDir } from './config';
+import { clarkesimPath, configsDir, knownAircraft, settings, simulatorPath, workspaceRoot } from './config';
 
 export const output = vscode.window.createOutputChannel('Clarkesim');
 
 /**
  * Work out which aircraft build a config belongs to:
- *   1. assets/yamls/<aircraft>/x.yaml  -> <aircraft>
+ *   1. <Clarkesim>/config/<aircraft>/x.yaml  -> <aircraft>
  *   2. filename prefix, e.g. lincoln_silsim_reference.yaml -> lincoln
  *   3. ask the user
  */
@@ -15,7 +15,7 @@ export async function resolveAircraft(configPath: string): Promise<string | unde
   const known = knownAircraft();
   const lower = known.map(k => k.toLowerCase());
 
-  const dir = yamlsDir();
+  const dir = configsDir();
   if (dir) {
     const parts = path.relative(dir, configPath).split(path.sep);
     if (parts.length > 1 && parts[0] !== '..' && lower.includes(parts[0].toLowerCase())) {

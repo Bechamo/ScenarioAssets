@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
-import { assetsDir, settings } from './config';
+import { assetsDir, configsDir, settings } from './config';
 
 export type Category = 'config' | 'stf' | 'mission';
 
@@ -12,11 +12,16 @@ export interface ScenarioNode {
   label: string;
 }
 
-const GROUPS: { label: string; dir: string; category: Category }[] = [
-  { label: 'Configs', dir: 'yamls', category: 'config' },
-  { label: 'STF tests', dir: 'stf', category: 'stf' },
-  { label: 'Missions', dir: 'mission', category: 'mission' },
+/** Configs come from Clarkesim's config/; STF tests and missions from the ScenarioAssets root. */
+const GROUPS: { label: string; dir: () => string | undefined; category: Category }[] = [
+  { label: 'Configs', dir: () => configsDir(), category: 'config' },
+  { label: 'STF tests', dir: () => sub(assetsDir(), 'stf'), category: 'stf' },
+  { label: 'Missions', dir: () => sub(assetsDir(), 'mission'), category: 'mission' },
 ];
+
+function sub(root: string | undefined, dir: string): string | undefined {
+  return root ? path.join(root, dir) : undefined;
+}
 
 const EXTENSIONS: Record<Category, string[]> = {
   config: ['.yaml', '.yml'],
@@ -52,13 +57,15 @@ export class ScenarioTreeProvider implements vscode.TreeDataProvider<ScenarioNod
   }
 
   async getChildren(node?: ScenarioNode): Promise<ScenarioNode[]> {
-    const root = assetsDir();
-    if (!root) { return []; }
-
     if (!node) {
-      return GROUPS
-        .map(g => ({ kind: 'group' as const, category: g.category, label: g.label, uri: vscode.Uri.file(path.join(root, g.dir)) }))
-        .filter(g => fs.existsSync(g.uri.fsPath));
+      const groups: ScenarioNode[] = [];
+      for (const g of GROUPS) {
+        const dir = g.dir();
+        if (dir && fs.existsSync(dir)) {
+          groups.push({ kind: 'group', category: g.category, label: g.label, uri: vscode.Uri.file(dir) });
+        }
+      }
+      return groups;
     }
     if (node.kind === 'file') { return []; }
 
